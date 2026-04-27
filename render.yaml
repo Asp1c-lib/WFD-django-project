@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: healthcare-support
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn healthcare_support.wsgi:application"
