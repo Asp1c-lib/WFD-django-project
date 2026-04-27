@@ -47,3 +47,19 @@ class AuthTests(TestCase):
     def test_login_page_access(self):
         response = self.client.get("/accounts/login/")
         self.assertEqual(response.status_code, 200)
+        
+class SecurityTests(TestCase):
+
+    def setUp(self):
+        self.customer = CustomUser.objects.create_user(
+            username="usersecure",
+            password="password",
+            role="customer"
+        )
+
+    def test_customer_cannot_access_admin_dashboard(self):
+        self.client.login(username="usersecure", password="password")
+
+        response = self.client.get("/admin/")
+
+        self.assertNotEqual(response.status_code, 200)

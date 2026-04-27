@@ -87,3 +87,62 @@ class CaseViewTests(TestCase):
         response = self.client.get(reverse("my_cases"))
 
         self.assertEqual(response.status_code, 200)
+        
+class CustomerUseCaseTests(TestCase):
+
+    def setUp(self):
+        self.customer = CustomUser.objects.create_user(
+            username="usercase",
+            password="password",
+            role="customer"
+        )
+
+    def test_customer_can_create_case(self):
+        self.client.login(username="usercase", password="password")
+
+        response = self.client.post(
+            reverse("create_case"),
+            {
+                "title": "Test 1",
+                "description": "Test 1 desc",
+                "category": "Others",
+                "priority": "High"
+            }
+        )
+
+        self.assertEqual(response.status_code, 302)  # redirect
+        self.assertEqual(Case.objects.count(), 1)
+
+        case = Case.objects.first()
+        self.assertEqual(case.title, "Test 1")
+        
+class AgentUseCaseTests(TestCase):
+
+    def setUp(self):
+        self.customer = CustomUser.objects.create_user(
+            username="customer1",
+            password="password",
+            role="customer"
+        )
+
+        self.agent = CustomUser.objects.create_user(
+            username="agent1",
+            password="password",
+            role="agent"
+        )
+
+        self.case = Case.objects.create(
+            customer=self.customer,
+            title="Billing Problem",
+            description="Incorrect invoice",
+            category="Billing",
+            priority="Medium"
+        )
+
+    def test_agent_can_view_open_cases(self):
+        self.client.login(username="agent1", password="password")
+
+        response = self.client.get("/dashboard/")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Billing Problem")
