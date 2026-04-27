@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from .forms import CustomUserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
@@ -9,15 +9,19 @@ from django.contrib.auth.forms import AuthenticationForm
 def register_view(request):
     if request.method == "POST":
         form = CustomUserCreationForm(request.POST)
+
         if form.is_valid():
-            user = form.save()
+            user = form.save(commit=False)
+            user.role = "customer"
+            user.save()
+
             login(request, user)
             return redirect('dashboard_home')
+
     else:
         form = CustomUserCreationForm()
 
     return render(request, 'accounts/register.html', {'form': form})
-
 
 # login
 def login_view(request):

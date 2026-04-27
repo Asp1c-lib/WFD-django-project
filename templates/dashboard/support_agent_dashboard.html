@@ -11,9 +11,75 @@
 
     <h2>Support Agent Dashboard</h2>
 
-    <p>Manage assigned cases here.</p>
+    <hr>
 
-    <a href="/accounts/logout/" class="btn btn-danger">Logout</a>
+    <h4>Open Cases</h4>
+
+    {% for case in open_cases %}
+        <div class="card mb-3">
+            <div class="card-body">
+
+                <h5>{{ case.title }}</h5>
+                <p>{{ case.description }}</p>
+
+                <span class="badge bg-info">{{ case.status }}</span>
+
+                <div class="float-end">
+
+                    <a href="/cases/{{ case.id }}/claim/" class="btn btn-sm btn-primary">
+                        Claim
+                    </a>
+
+                    <a href="/cases/{{ case.id }}/escalate/" class="btn btn-sm btn-warning">
+                        Escalate
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+    {% empty %}
+        <p>No open cases.</p>
+    {% endfor %}
+
+    <hr>
+
+    <h4>My Assigned Cases</h4>
+
+    {% for case in my_cases %}
+        <div class="card mb-3">
+            <div class="card-body">
+
+                <h5>{{ case.title }}</h5>
+                <p>{{ case.description }}</p>
+
+                <span class="badge bg-warning">{{ case.status }}</span>
+
+                <div class="float-end">
+
+                    <a href="/cases/{{ case.id }}/" class="btn btn-sm btn-dark">
+                        View
+                    </a>
+
+                    <a href="/cases/{{ case.id }}/escalate/" class="btn btn-sm btn-danger">
+                        Escalate
+                    </a>
+
+                </div>
+
+            </div>
+        </div>
+
+    {% empty %}
+        <p>No assigned cases.</p>
+    {% endfor %}
+
+    <hr>
+
+    <a href="/accounts/logout/" class="btn btn-danger">
+        Logout
+    </a>
 
 </div>
 

@@ -61,7 +61,7 @@ class Case(models.Model):
     def __str__(self):
         return self.title
 
-
+# TODO: to implement later
 class CaseNote(models.Model):
     case = models.ForeignKey(Case, related_name='notes', on_delete=models.CASCADE)
     author = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)

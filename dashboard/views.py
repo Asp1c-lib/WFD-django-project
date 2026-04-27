@@ -10,13 +10,31 @@ from cases.models import Case
 def dashboard_home(request):
     user = request.user
 
-    if user.role == 'customer':
+    if user.is_superuser or user.role == 'admin':
+        all_cases = Case.objects.all()
+        unresolved_cases = Case.objects.exclude(status='Resolved')
+
+        return render(
+            request,
+            'dashboard/admin_dashboard.html',
+            {
+                'all_cases': all_cases,
+                'unresolved_cases': unresolved_cases
+            }
+        )
+
+    elif user.role == 'customer':
         cases = Case.objects.filter(customer=user)
-        return render(request, 'dashboard/customer_dashboard.html', {'cases': cases})
+        return render(
+            request,
+            'dashboard/customer_dashboard.html',
+            {'cases': cases}
+        )
 
     elif user.role == 'agent':
         open_cases = Case.objects.filter(status='Open')
         my_cases = Case.objects.filter(assigned_agent=user)
+
         return render(
             request,
             'dashboard/support_agent_dashboard.html',
@@ -34,15 +52,5 @@ def dashboard_home(request):
             {'escalated_cases': escalated_cases}
         )
 
-    else:
-        all_cases = Case.objects.all()
-        unresolved_cases = Case.objects.exclude(status='Resolved')
-
-        return render(
-            request,
-            'dashboard/admin_dashboard.html',
-            {
-                'all_cases': all_cases,
-                'unresolved_cases': unresolved_cases
-            }
-        )
+    # fallback (optional safety)
+    return render(request, 'dashboard/customer_dashboard.html')

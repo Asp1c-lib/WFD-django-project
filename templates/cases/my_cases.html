@@ -10,8 +10,14 @@
 <div class="container mt-4">
 
     <div class="d-flex justify-content-between align-items-center mb-3">
+
         <h2>My Support Cases</h2>
-        <a href="/cases/create/" class="btn btn-success">New Case</a>
+
+        <div>
+            <a href="/dashboard/" class="btn btn-secondary">Dashboard</a>
+            <a href="/cases/create/" class="btn btn-success">New Case</a>
+        </div>
+
     </div>
 
     {% for case in cases %}

@@ -22,7 +22,7 @@ def create_case(request):
 
         CaseLog.objects.create(
             case=new_case,
-            action="Case created",
+            action="Case created with attachment",
             performed_by=request.user
         )
 

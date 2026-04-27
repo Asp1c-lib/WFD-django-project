@@ -9,11 +9,61 @@
 
 <div class="container mt-4">
 
-    <h2>Healthcare Specialist Dashboard</h2>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>Healthcare Specialist Dashboard</h2>
 
-    <p>View escalated medical cases.</p>
+        <div>
+            <a href="/accounts/logout/" class="btn btn-danger">Logout</a>
+        </div>
+    </div>
 
-    <a href="/accounts/logout/" class="btn btn-danger">Logout</a>
+    <p class="text-muted">
+        View escalated cases and provide medical resolution
+    </p>
+
+    <hr>
+
+    <h4>Escalated Cases</h4>
+
+    {% for case in escalated_cases %}
+
+        <div class="card mb-3 shadow-sm">
+
+            <div class="card-body">
+
+                <h5>{{ case.title }}</h5>
+                <p>{{ case.description }}</p>
+
+                <p>
+                    <strong>Category:</strong> {{ case.category }} <br>
+                    <strong>Priority:</strong> {{ case.priority }}
+                </p>
+
+                <span class="badge bg-warning">{{ case.status }}</span>
+
+                <div class="float-end">
+
+                    <a href="/cases/{{ case.id }}/" class="btn btn-primary btn-sm">
+                        View
+                    </a>
+
+                    <a href="/cases/{{ case.id }}/resolve/" class="btn btn-success btn-sm">
+                        Resolve
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    {% empty %}
+
+        <div class="alert alert-info">
+            No escalated cases available.
+        </div>
+
+    {% endfor %}
 
 </div>
 
